@@ -43,6 +43,24 @@ The module implementation trait is as follows:
       }
     }
 
+    class FixedInputStream(data: Seq[BigInt], w: Int) extends Module {
+        val io = IO(new Bundle {
+            val out = Decoupled(UInt(w.W))
+        })
+
+        val s_start :: s_send :: s_done :: Nil = Enum(3)
+        val state = RegInit(s_idle)
+
+        val dataVec = VecInit(data.map(_.U(w.W)))
+        val (sendIdx, sendDone) = Counter(io.out.fire(), data.size)
+
+        io.out.valid := (state === s_send)
+        io.out.bits := dataVec(sendIdx)
+
+        when (state === s_start) { state := s_send }
+        when (sendDone) { state := s_done }
+    }
+
 Since the interrupts and memory ports have already been connected in the
 lazy module trait, the module implementation trait only needs to create the
 external decoupled interface and connect that to the ``InputStream`` module
