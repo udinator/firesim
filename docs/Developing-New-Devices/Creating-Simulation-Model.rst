@@ -68,7 +68,7 @@ subdirectories under it.
 In the ``vsrc`` directory, create a file called ``SimInputStream.v`` and add
 the following code.
 
-.. code-block:: verilog
+.. code-block:: text
 
     import "DPI-C" function void input_stream_init
     (
@@ -82,6 +82,8 @@ the following code.
         input  bit     out_ready,
         output longint out_bits
     );
+
+.. code-block:: verilog
 
     module SimInputStream #(DATA_BITS=64) (
         input                  clock,
