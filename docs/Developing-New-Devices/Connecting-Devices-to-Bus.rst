@@ -49,7 +49,7 @@ The module implementation trait is as follows:
         })
 
         val s_start :: s_send :: s_done :: Nil = Enum(3)
-        val state = RegInit(s_idle)
+        val state = RegInit(s_start)
 
         val dataVec = VecInit(data.map(_.U(w.W)))
         val (sendIdx, sendDone) = Counter(io.out.fire(), data.size)
