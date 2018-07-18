@@ -1,5 +1,6 @@
 package firesim
 
+import chisel3._
 import freechips.rocketchip.config.{Parameters, Config}
 import freechips.rocketchip.tile._
 import freechips.rocketchip.tilelink._
@@ -9,6 +10,8 @@ import boom.system.BoomTilesKey
 import testchipip.{WithBlockDevice, BlockDeviceKey, BlockDeviceConfig}
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
 import icenet._
+import memblade.{MemBladeKey, MemBladeParams, MemBladeQueueParams, RemoteMemClientKey, RemoteMemClientConfig}
+import memblade.RemoteMemConsts.RMEM_REQ_ETH_TYPE
 
 class WithBootROM extends Config((site, here, up) => {
   case BootROMParams => BootROMParams(
@@ -26,7 +29,21 @@ class WithUARTKey extends Config((site, here, up) => {
 })
 
 class WithNICKey extends Config((site, here, up) => {
-  case NICKey => NICConfig(inBufPackets = 10)
+  case NICKey => NICConfig(
+    inBufPackets = 48,
+    ctrlQueueDepth = 64)
+})
+
+class WithMemBladeKey extends Config((site, here, up) => {
+  case MemBladeKey => MemBladeParams(
+    nPageTrackers = 2,
+    nWordTrackers = 4,
+    pageQueue = MemBladeQueueParams(reqHeadDepth = 48),
+    wordQueue = MemBladeQueueParams(reqHeadDepth = 48))
+})
+
+class WithRemoteMemClientKey extends Config((site, here, up) => {
+  case RemoteMemClientKey => RemoteMemClientConfig()
 })
 
 class WithLargeTLBs extends Config((site, here, up) => {
@@ -99,6 +116,14 @@ class FireSimRocketChipHexaCoreConfig extends Config(new WithNBigCores(6) ++
 class FireSimRocketChipOctaCoreConfig extends Config(new WithNBigCores(8) ++
   new FireSimRocketChipSingleCoreConfig)
 
+class FireSimMemBladeConfig extends Config(
+  new WithMemBladeKey ++ new WithRemoteMemClientKey ++ new FireSimRocketChipConfig)
+
+class FireSimMemBladeSingleCoreConfig extends Config(
+  new WithNBigCores(1) ++ new FireSimMemBladeConfig)
+
+class FireSimMemBladeDualCoreConfig extends Config(
+  new WithNBigCores(2) ++ new FireSimMemBladeConfig)
 
 class FireSimBoomConfig extends Config(
   new WithBootROM ++

@@ -9,6 +9,7 @@ import icenet._
 import testchipip._
 import sifive.blocks.devices.uart._
 import java.io.File
+import memblade.{HasPeripheryMemBlade, HasPeripheryMemBladeModuleImpValidOnly}
 
 
 /*******************************************************************************
@@ -93,3 +94,12 @@ class FireBoomNoNICModuleImp[+L <: FireBoomNoNIC](l: L) extends BoomSubsystemMod
     with HasPeripherySerialModuleImp
     with HasPeripheryUARTModuleImp
     with HasPeripheryBlockDeviceModuleImp
+
+class FireSimMemBlade(implicit p: Parameters) extends FireSimNoNIC
+    with HasPeripheryMemBlade {
+  override lazy val module = new FireSimMemBladeModuleImp(this)
+}
+
+class FireSimMemBladeModuleImp[+L <: FireSimMemBlade](l: L)
+    extends FireSimNoNICModuleImp(l)
+    with HasPeripheryMemBladeModuleImpValidOnly

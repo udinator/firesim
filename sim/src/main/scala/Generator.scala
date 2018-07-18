@@ -21,6 +21,7 @@ trait HasGenerator extends GeneratorApp {
       case "FireSim"  => LazyModule(new FireSim()(params)).module
       case "FireSimNoNIC"  => LazyModule(new FireSimNoNIC()(params)).module
       case "FireBoomNoNIC" => LazyModule(new FireBoomNoNIC()(params)).module
+      case "FireSimMemBlade" => LazyModule(new FireSimMemBlade()(params)).module
     }
   }
 
