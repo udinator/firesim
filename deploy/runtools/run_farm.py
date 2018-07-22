@@ -318,7 +318,7 @@ class InstanceDeployManager:
     def unload_edma(self):
         self.instance_logger("Unloading EDMA Driver Kernel Module.")
         with warn_only(), StreamLogger('stdout'), StreamLogger('stderr'):
-            run('sudo rmmod edma-drv')
+            run('sudo rmmod xdma')
 
     def clear_fpgas(self):
         # we always clear ALL fpga slots
@@ -341,7 +341,7 @@ class InstanceDeployManager:
         self.instance_logger("Loading EDMA Driver Kernel Module.")
         # TODO: can make these values automatically be chosen based on link lat
         with StreamLogger('stdout'), StreamLogger('stderr'):
-            run("sudo insmod /home/centos/edma/linux_kernel_drivers/edma/edma-drv.ko single_transaction_size=65536 transient_buffer_size=67108864 edma_queue_depth=1024 poll_mode=1")
+            run("sudo insmod /home/centos/edma/linux_kernel_drivers/xdma/xdma.ko poll_mode=1")
 
 
     def copy_sim_slot_infrastructure(self, slotno):
