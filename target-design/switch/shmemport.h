@@ -23,15 +23,37 @@ ShmemPort::ShmemPort(int portNo) : BasePort(portNo) {
         sprintf(name, "/port_nts%d_%d", _portNo, j);
         printf("opening/creating shmem region %s\n", name);
         shmemfd = shm_open(name, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
-        ftruncate(shmemfd, BUFSIZE_BYTES+SHMEM_EXTRABYTES);
+	if (shmemfd < 0) {
+		perror("shm_open");
+		abort();
+	}
+        if (ftruncate(shmemfd, BUFSIZE_BYTES+SHMEM_EXTRABYTES)) {
+		perror("ftruncate");
+		abort();
+	}
         recvbufs[j] = (uint8_t*)mmap(NULL, BUFSIZE_BYTES+SHMEM_EXTRABYTES, PROT_READ | PROT_WRITE, MAP_SHARED, shmemfd,0);
+	if (recvbufs[j] == MAP_FAILED) {
+		perror("mmap");
+		abort();
+	}
         memset(recvbufs[j], 0, BUFSIZE_BYTES+SHMEM_EXTRABYTES);
 
         sprintf(name, "/port_stn%d_%d", _portNo, j);
         printf("opening/creating shmem region %s\n", name);
         shmemfd = shm_open(name, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
-        ftruncate(shmemfd, BUFSIZE_BYTES+SHMEM_EXTRABYTES);
+	if (shmemfd < 0) {
+		perror("shm_open");
+		abort();
+	}
+        if (ftruncate(shmemfd, BUFSIZE_BYTES+SHMEM_EXTRABYTES)) {
+		perror("ftruncate");
+		abort();
+	}
         sendbufs[j] = (uint8_t*)mmap(NULL, BUFSIZE_BYTES+SHMEM_EXTRABYTES, PROT_READ | PROT_WRITE, MAP_SHARED, shmemfd,0);
+	if (sendbufs[j] == MAP_FAILED) {
+		perror("mmap");
+		abort();
+	}
         memset(sendbufs[j], 0, BUFSIZE_BYTES+SHMEM_EXTRABYTES);
     }
 
