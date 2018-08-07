@@ -109,7 +109,26 @@ memblade-linux-bmark2:
 	cp ../../sw/memblade-tests/linux/memblade-bmark.riscv $@/overlay
 	python gen-benchmark-rootfs.py -w $@.json -r -b ../../sw/firesim-software/rootfs0.ext2 -s $@/overlay
 
+memblade-lat:
+	cd ../../sw/memblade-tests/linux && make memblade-lat.riscv
+	cd ../../sw/memblade-tests/baremetal && make memblade-dummy.riscv
+	cp ../../sw/memblade-tests/linux/memblade-lat.riscv $@/overlay
+	python gen-benchmark-rootfs.py -w $@.json -r -b ../../sw/firesim-software/rootfs0.ext2 -s $@/overlay
+
+memblade-lat2:
+	cd ../../sw/memblade-tests/linux && make memblade-{lat,bmark}.riscv
+	cd ../../sw/memblade-tests/baremetal && make memblade-dummy.riscv
+	cp ../../sw/memblade-tests/linux/memblade-{lat,bmark}.riscv $@/overlay
+	python gen-benchmark-rootfs.py -w $@.json -r -b ../../sw/firesim-software/rootfs0.ext2 -s $@/overlay
+
 pagerank-local:
+	mkdir -p $@/overlay
+	cd ../../sw/memblade-tests/linux && make pagerank-local.riscv
+	cp ../../sw/memblade-tests/linux/pagerank-local.riscv $@/overlay
+	cp ../../sw/memblade-tests/data/* $@/overlay
+	python gen-benchmark-rootfs.py -w $@.json -r -b ../../sw/firesim-software/rootfs0.ext2 -s $@/overlay
+
+pagerank-local2:
 	mkdir -p $@/overlay
 	cd ../../sw/memblade-tests/linux && make pagerank-local.riscv
 	cp ../../sw/memblade-tests/linux/pagerank-local.riscv $@/overlay
@@ -132,4 +151,19 @@ pagerank-remote2:
 	cp ../../sw/memblade-tests/data/* $@/overlay
 	python gen-benchmark-rootfs.py -w $@.json -r -b ../../sw/firesim-software/rootfs0.ext2 -s $@/overlay
 
-.PHONY: $(spec17_overlays) $(spec17_rootfs_dirs) gapbs fedora-uniform memcached-thread-imbalance bw-test-one-instance bw-test-two-instances ping-latency simperf-test simperf-test-latency simperf-test-scale iperf3 iperf3-loopback check-rtc check-rtc-linux allpaper memblade-test memblade-page-bmark memblade-linux-bmark memblade-linux-bmark2 pagerank-local pagerank-remote pagerank-remote2
+histo-local:
+	mkdir -p $@/overlay
+	cd ../../sw/memblade-tests/linux && make histo-local.riscv
+	cp ../../sw/memblade-tests/linux/histo-local.riscv $@/overlay
+	cp ../../sw/memblade-tests/data/histo-data-26-22.bin $@/overlay
+	python gen-benchmark-rootfs.py -w $@.json -r -b ../../sw/firesim-software/rootfs0.ext2 -s $@/overlay
+
+.PHONY: $(spec17_overlays) $(spec17_rootfs_dirs) gapbs fedora-uniform \
+	memcached-thread-imbalance bw-test-one-instance bw-test-two-instances \
+	ping-latency simperf-test simperf-test-latency simperf-test-scale \
+	iperf3 iperf3-loopback check-rtc check-rtc-linux allpaper \
+	memblade-test memblade-page-bmark \
+	memblade-linux-bmark memblade-linux-bmark2 \
+	memblade-lat memblade-lat2 \
+	pagerank-local pagerank-local2 pagerank-remote pagerank-remote2 \
+	histo-local
