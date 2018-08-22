@@ -144,10 +144,18 @@ void firesim_top_t::handle_loadmem_write(fesvr_loadmem_t loadmem) {
 
 void firesim_top_t::tether_bypass_via_loadmem() {
     fesvr_loadmem_t loadmem;
+
+    bool had_loadmem_reqs = false;
     while (fesvr->has_loadmem_reqs()) {
+        had_loadmem_reqs = true;
         // Check for reads first as they preceed a narrow write;
         if (fesvr->recv_loadmem_read_req(loadmem)) handle_loadmem_read(loadmem);
         if (fesvr->recv_loadmem_write_req(loadmem)) handle_loadmem_write(loadmem);
+    }
+
+    if (had_loadmem_reqs) {
+        printf("Target called out of reset at %llu cycles.\n", cycles());
+        target_outof_reset();
     }
 }
 
@@ -198,6 +206,10 @@ void firesim_top_t::loop(size_t step_size, uint64_t coarse_step_size) {
 }
 
 void firesim_top_t::run(size_t step_size) {
+
+    // hold target in reset and advance 50 steps for min reset period
+    target_into_reset_and_steps(50);
+
     for (auto e: fpga_models) {
         e->init();
     }
@@ -213,7 +225,7 @@ void firesim_top_t::run(size_t step_size) {
     fprintf(stderr, "Commencing simulation.\n");
 
     // Assert reset T=0 -> 50
-    target_reset(0, 50);
+//    target_reset(0, 50);
 
     uint64_t start_time = timestamp();
 
