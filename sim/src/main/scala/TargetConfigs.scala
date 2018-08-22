@@ -69,7 +69,7 @@ class BoomWithLargeTLBs extends Config((site, here, up) => {
 * determine which driver to build.
 *******************************************************************************/
 class FireSimRocketChipConfig extends Config(
-  new WithBootROM ++
+//  new WithBootROM ++
   new WithPeripheryBusFrequency(BigInt(3200000000L)) ++
   new WithExtMemSize(0x400000000L) ++ // 16GB
   new WithoutTLMonitors ++

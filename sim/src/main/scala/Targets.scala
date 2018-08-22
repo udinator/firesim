@@ -1,5 +1,6 @@
 package firesim
 
+import chisel3._
 import freechips.rocketchip._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.devices.tilelink._
@@ -24,7 +25,7 @@ import java.io.File
 
 class FireSim(implicit p: Parameters) extends RocketSubsystem
     with CanHaveMisalignedMasterAXI4MemPort
-    with HasPeripheryBootROM
+//    with HasPeripheryBootROM
     with HasSystemErrorSlave
     // with HasSyncExtInterrupts
     with HasNoDebug
@@ -39,14 +40,17 @@ class FireSim(implicit p: Parameters) extends RocketSubsystem
 class FireSimModuleImp[+L <: FireSim](l: L) extends RocketSubsystemModuleImp(l)
     with HasRTCModuleImp
     with CanHaveMisalignedMasterAXI4MemPortModuleImp
-    with HasPeripheryBootROMModuleImp
+//    with HasPeripheryBootROMModuleImp
     // with HasExtInterruptsModuleImp
     with HasNoDebugModuleImp
     with HasPeripherySerialModuleImp
     with HasPeripheryUARTModuleImp
     with HasPeripheryIceNICModuleImpValidOnly
     with HasPeripheryBlockDeviceModuleImp
+{
+  global_reset_vector := BigInt(0x80000000L).U
 
+}
 class FireSimNoNIC(implicit p: Parameters) extends RocketSubsystem
     with CanHaveMisalignedMasterAXI4MemPort
     with HasPeripheryBootROM

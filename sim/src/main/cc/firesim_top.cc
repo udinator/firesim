@@ -207,9 +207,6 @@ void firesim_top_t::loop(size_t step_size, uint64_t coarse_step_size) {
 
 void firesim_top_t::run(size_t step_size) {
 
-    // hold target in reset and advance 50 steps for min reset period
-    target_into_reset_and_steps(50);
-
     for (auto e: fpga_models) {
         e->init();
     }
@@ -223,6 +220,10 @@ void firesim_top_t::run(size_t step_size) {
         zero_out_dram();
     }
     fprintf(stderr, "Commencing simulation.\n");
+
+
+    // hold target in reset and advance 50 steps for min reset period
+    target_into_reset_and_steps(50);
 
     // Assert reset T=0 -> 50
 //    target_reset(0, 50);
