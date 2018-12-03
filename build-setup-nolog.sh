@@ -78,6 +78,9 @@ else
     # build static libfesvr library for linking into driver
     cd riscv-fesvr/build
     $RDIR/scripts/build-static-libfesvr.sh
+    # build static ssdd timing model library for linking into driver
+    cd $RDIR/sim/src/main/cc/endpoints/SimpleSSD
+    $RDIR/scripts/build-static-libssd.sh
     # build linux toolchain
     cd $RDIR
     cd target-design/firechip/riscv-tools/riscv-gnu-toolchain/build
