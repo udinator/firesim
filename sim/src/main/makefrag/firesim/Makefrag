@@ -50,7 +50,8 @@ DRIVER_CC = $(wildcard $(addprefix $(driver_dir)/, $(addsuffix .cc, \
   $(driver_dir)/endpoints/SimpleSSD/libssd.a
 $(info driver cc files: $(DRIVER_CC))
 
-TARGET_CXX_FLAGS := -g -I$(driver_dir) -I$(driver_dir)/firesim -I$(RISCV)/include \
+TARGET_CXX_FLAGS := -g -I$(driver_dir) -I$(driver_dir)/firesim -I$(RISCV)/include
+TARGET_LD_FLAGS := -L$(driver_dir)/endpoints/SimpleSSD -lssd 
 
 ####################################
 # Runtime-Configuraiton Generation #

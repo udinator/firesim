@@ -48,11 +48,11 @@ $(verilator) $(verilator_debug): export LDFLAGS := $(LDFLAGS) $(common_ld_flags)
 
 $(verilator): $(HEADER) $(DRIVER_C) $(DRIVER_CC) $(DRIVER_H) $(midas_cc) $(midas_h)
 	$(MAKE) -C $(simif_dir) verilator PLATFORM=$(PLATFORM) DESIGN=$(DESIGN) \
-	GEN_DIR=$(GENERATED_DIR) DRIVER="$(DRIVER_C) $(DRIVER_CC)"
+	GEN_DIR=$(GENERATED_DIR) DRIVER="$(DRIVER_CC)"
 
 $(verilator_debug): $(HEADER) $(DRIVER_C) $(DRIVER_CC) $(DRIVER_H) $(midas_cc) $(midas_h)
 	$(MAKE) -C $(simif_dir) verilator-debug PLATFORM=$(PLATFORM) DESIGN=$(DESIGN) \
-	GEN_DIR=$(GENERATED_DIR) DRIVER="$(DRIVER_C) $(DRIVER_CC)" 
+	GEN_DIR=$(GENERATED_DIR) DRIVER="$(DRIVER_CC)" 
 verilator: $(verilator)
 verilator-debug: $(verilator_debug)
 
